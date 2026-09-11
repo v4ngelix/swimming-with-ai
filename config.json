@@ -1,6 +1,6 @@
 {
   "title": "Swimming with AI",
-  "subtitle": "Logging sightings and identifying seen floar and fauna with claude LLM, using a separate chat project with finetuned instructions.",
+  "subtitle": "Logging sightings and identifying the flora and fauna I see, using Claude in a dedicated chat project with fine-tuned instructions.",
   "assetsDir": "assets",
   "buttons": [
     {
