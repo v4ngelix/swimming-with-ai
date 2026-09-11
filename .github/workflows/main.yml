@@ -1,0 +1,47 @@
+name: Deploy to Website
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  REMOTE_HOST: boheemia.ee
+  REMOTE_USER: virt65914
+  REMOTE_PATH: domeenid/www.boheemia.ee/swimming-with-ai/
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Stage static files
+        run: cp -r assets config.json photos.json dist/
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$REMOTE_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload build
+        run: |
+          ssh "$REMOTE_USER@$REMOTE_HOST" "mkdir -p $REMOTE_PATH"
+          rsync -avz --delete dist/ "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH"
