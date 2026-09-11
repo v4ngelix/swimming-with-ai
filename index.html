@@ -86,7 +86,7 @@
 
   .subtitle {
     margin: 14px auto 0;
-    max-width: 44ch;
+    max-width: 50ch;
     color: var(--muted);
     font-size: clamp(.95rem, 1.6vw, 1.1rem);
   }
@@ -246,9 +246,10 @@
 </head>
 <body>
   <header>
-    <h1 id="title">Swimming with AI</h1>
-    <p class="subtitle" id="subtitle"></p>
-    <p class="eyebrow" id="eyebrow">Sardinia · East coast</p>
+    <h1>Swimming with AI</h1>
+    <p class="subtitle">Logging sightings and identifying the flora and fauna I see, using Claude in a dedicated chat project with fine-tuned instructions.</p>
+    <p class="subtitle"><strong>NB!</strong> The names may well be wrong. After all, I'm only an enthusiastic amateur.</p>
+    <p class="eyebrow">Sardinia · East coast</p>
   </header>
 
   <main class="wall" id="wall"></main>
@@ -281,16 +282,6 @@
          `Run <code>npm run photos</code>, then start the dev server with <code>npm run dev</code> — ` +
          `opening index.html straight from disk blocks the JSON files.`);
     return;
-  }
-
-  document.title = config.title || document.title;
-  document.getElementById('title').textContent = config.title || 'Photo wall';
-  document.getElementById('subtitle').textContent = config.subtitle || '';
-  // config.eyebrow: a string replaces the label, an empty string removes the pill
-  if (config.eyebrow !== undefined) {
-    const eyebrow = document.getElementById('eyebrow');
-    eyebrow.textContent = config.eyebrow;
-    eyebrow.hidden = !config.eyebrow;
   }
 
   const assetsDir = (config.assetsDir || 'assets').replace(/\/+$/, '');
