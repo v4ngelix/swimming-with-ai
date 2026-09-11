@@ -1,0 +1,15 @@
+{
+  "name": "month-in-sardinia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Masonry photo wall of marine flora and fauna from the east coast of Sardinia",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
+  }
+}

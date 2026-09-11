@@ -1,0 +1,25 @@
+{
+  "title": "Swimming with AI",
+  "subtitle": "Logging sightings and identifying seen floar and fauna with claude LLM, using a separate chat project with finetuned instructions.",
+  "assetsDir": "assets",
+  "buttons": [
+    {
+      "id": "wikipedia",
+      "label": "Wikipedia article",
+      "urlTemplate": "https://en.wikipedia.org/wiki/{title_underscore}",
+      "icon": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M21.6 6.1h-5v.8l1.3.1c.5.1.6.3.4.8l-2.9 6.9-3-7c-.2-.5 0-.6.4-.7l1-.1v-.8H7.9v.8l.6.1c.5.1.7.2 1 .8l.7 1.5-2.4 5.4-3-7c-.2-.5 0-.6.4-.7l.9-.1v-.8H0v.8l.5.1c.6.1.8.3 1.1.9l4.6 10.4h.9L9.9 13l2.8 6.2h.9l4.7-10.7c.3-.6.5-.8 1-.9l.5-.1v-.8h1.8z\"/></svg>"
+    },
+    {
+      "id": "worms",
+      "label": "WoRMS taxon record",
+      "urlTemplate": "https://www.marinespecies.org/aphia.php?p=taxlist&searchpar=0&tComp=contains&tName={title}",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M2 7.5c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 3-1.5 5-1.5\"/><path d=\"M2 13c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 3-1.5 5-1.5\"/><path d=\"M2 18.5c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 3-1.5 5-1.5\"/></svg>"
+    },
+    {
+      "id": "inaturalist",
+      "label": "iNaturalist observations",
+      "urlTemplate": "https://www.inaturalist.org/taxa/search?q={title}",
+      "icon": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"currentColor\" d=\"M21 3s-9.8.7-13.4 4.3c-2.8 2.8-2.9 7-.6 9.5l-3.3 3.3 1.4 1.4 3.3-3.3c2.5 2.2 6.7 2.1 9.5-.7C21.5 13.9 21 3 21 3zm-4.5 12.8c-1.9 1.9-4.6 2.2-6.3 1l7.1-7.1-1.4-1.4-7.1 7.1c-1.2-1.7-.9-4.4 1-6.3 2.2-2.2 7.6-3.1 10.4-3.4-.3 2.8-1.4 8-3.7 10.1z\"/></svg>"
+    }
+  ]
+}
