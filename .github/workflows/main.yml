@@ -9,7 +9,7 @@ on:
 env:
   REMOTE_HOST: boheemia.ee
   REMOTE_USER: virt65914
-  REMOTE_PATH: domeenid/www.boheemia.ee/sardinia/
+  REMOTE_PATH: domeenid/www.boheemia.ee/swimming/
 
 jobs:
   deploy:
