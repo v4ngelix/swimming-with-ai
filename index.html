@@ -189,7 +189,7 @@
   .actions svg { width: 19px; height: 19px; }
 
   /* marks photos added in the current app version; always visible, unlike the overlays */
-  .badge-new {
+  .badge-latest {
     position: absolute;
     top: var(--pad);
     left: var(--pad);
@@ -206,8 +206,8 @@
     transition: transform .28s cubic-bezier(.2, .7, .3, 1);
   }
   /* cancels the tile's hover lift so the badge stays put on the page */
-  figure:hover .badge-new,
-  figure:focus-within .badge-new { transform: translateY(4px); }
+  figure:hover .badge-latest,
+  figure:focus-within .badge-latest { transform: translateY(4px); }
 
   /* touch devices have no hover: show the overlays permanently */
   @media (hover: none) {
@@ -215,12 +215,12 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    figure, figure img, figcaption, .actions, .scrim, .badge-new { transition: none; }
+    figure, figure img, figcaption, .actions, .scrim, .badge-latest { transition: none; }
     figure:hover { transform: none; }
     figure:hover img { transform: none; }
     /* the tile no longer lifts, so nothing needs a counter-offset */
-    figure:hover .badge-new,
-    figure:focus-within .badge-new,
+    figure:hover .badge-latest,
+    figure:focus-within .badge-latest,
     figure:hover .actions,
     figure:focus-within .actions { transform: none; }
   }
@@ -324,8 +324,8 @@
 
     if (photo.version && photo.version === APP_VERSION) {
       const badge = document.createElement('span');
-      badge.className = 'badge-new';
-      badge.textContent = 'new';
+      badge.className = 'badge-latest';
+      badge.textContent = 'latest';
       figure.appendChild(badge);
     }
 

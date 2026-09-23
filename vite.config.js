@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
 
-// `npm version` bumps package.json; the wall marks photos carrying that version as new
+// `npm version` bumps package.json; the wall marks photos carrying that version as latest
 const { version } = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 export default defineConfig({
