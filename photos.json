@@ -91,6 +91,20 @@
         "version": "1.0.0",
         "links": {}
       }
+    ],
+    "2": [
+      {
+        "file": "Aplysina aerophoba.png",
+        "title": "Aplysina aerophoba",
+        "version": "1.0.2",
+        "links": {}
+      },
+      {
+        "file": "Diplodus vulgaris.png",
+        "title": "Diplodus vulgaris",
+        "version": "1.0.2",
+        "links": {}
+      }
     ]
   }
 }
