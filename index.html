@@ -49,28 +49,44 @@
     text-align: center;
   }
 
+  .places {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 1rem 0;
+  }
+
   .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: .5rem;
-    margin: 1rem 0;
+    margin: 0;
     padding: 6px 14px;
+    border: 0;
     border-radius: 999px;
     background: var(--surface);
     box-shadow: var(--shadow);
-    color: var(--teal);
-    font-size: .78rem;
-    font-weight: 600;
+    color: var(--muted);
+    font: 600 .78rem/1.5 var(--sans);
     letter-spacing: .1em;
     text-transform: uppercase;
+    cursor: pointer;
+    transition: color .16s ease, box-shadow .16s ease;
   }
   .eyebrow::before {
     content: "";
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--coral);
+    background: currentColor;
+    opacity: .4;
   }
+  .eyebrow:hover { color: var(--teal); box-shadow: var(--shadow-lift); }
+  .eyebrow:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  /* the location on show */
+  .eyebrow[aria-pressed="true"] { color: var(--teal); cursor: default; }
+  .eyebrow[aria-pressed="true"]::before { background: var(--coral); opacity: 1; }
 
   h1 {
     margin: 0;
@@ -112,8 +128,12 @@
     content-visibility: auto;
     contain-intrinsic-size: 300px 400px;
   }
+  figure { cursor: pointer; }
   figure:hover,
   figure:focus-within { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  figure:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  /* the picture picked by a click; its name is kept in the page url */
+  figure.selected { outline: 3px solid var(--coral); outline-offset: 3px; box-shadow: var(--shadow-lift); }
 
   figure img {
     display: block;
@@ -137,7 +157,8 @@
       linear-gradient(to bottom, rgba(12, 28, 32, .45), transparent 38%);
   }
   figure:hover .scrim,
-  figure:focus-within .scrim { opacity: 1; }
+  figure:focus-within .scrim,
+  figure.selected .scrim { opacity: 1; }
 
   figcaption {
     position: absolute;
@@ -170,9 +191,11 @@
   }
 
   figure:hover figcaption,
-  figure:focus-within figcaption { opacity: 1; transform: none; }
+  figure:focus-within figcaption,
+  figure.selected figcaption { opacity: 1; transform: none; }
   figure:hover .actions,
-  figure:focus-within .actions { opacity: 1; transform: translateY(4px); }
+  figure:focus-within .actions,
+  figure.selected .actions { opacity: 1; transform: translateY(4px); }
 
   .actions a {
     display: grid;
@@ -250,13 +273,15 @@
     <h1>Swimming with AI</h1>
     <p class="subtitle">Logging sightings and identifying the flora and fauna I've seen while swimming, using Claude in a dedicated project with custom instructions.</p>
     <p class="subtitle"><strong>NB!</strong> The names may well be wrong. After all, I'm only an enthusiastic amateur.</p>
-    <p class="eyebrow">Sardinia · East coast</p>
+    <nav class="places" id="places" aria-label="Locations"></nav>
   </header>
 
   <main class="wall" id="wall"></main>
   <p class="message" id="message" hidden></p>
 
 <script type="module">
+import locations from './locations.js';
+
 (async function () {
   // replaced at build time by vite's `define`; empty when the page runs without vite
   const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '';
@@ -285,14 +310,23 @@
     return;
   }
 
-  const assetsDir = (config.assetsDir || 'assets').replace(/\/+$/, '');
+  const assetsRoot = (config.assetsDir || 'assets').replace(/\/+$/, '');
   const buttons = config.buttons || [];
-  const photos = data.photos || [];
+  const photosByPlace = data.photos || {};
 
-  if (!photos.length) {
-    fail('No photos yet. Drop images into the assets folder and run <code>npm run photos</code>.');
-    return;
-  }
+  // newest place first (locations.js lists them oldest first)
+  const places = Object.entries(locations).map(([id, place]) => ({ id, ...place })).reverse();
+
+  // url-safe photo name: "Coris julis" -> "coris-julis"
+  const slug = (title) => title.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  // ?location=<place url>&photo=<photo slug>, so a copied url reopens the same view
+  const setUrl = (place, photo) => {
+    const params = new URLSearchParams({ location: place.url });
+    if (photo) params.set('photo', slug(photo.title));
+    history.replaceState(null, '', `?${params}`);
+  };
 
   // A button's link comes from the photo's own `links` map, falling back to the
   // button's urlTemplate. An explicit empty string hides the button for that photo.
@@ -305,10 +339,9 @@
       .replace(/{title}/g, encodeURIComponent(photo.title));
   };
 
-  const frag = document.createDocumentFragment();
-
-  for (const photo of photos) {
+  const buildFigure = (photo, assetsDir) => {
     const figure = document.createElement('figure');
+    figure.tabIndex = 0;
 
     const img = document.createElement('img');
     img.src = `${assetsDir}/${encodeURIComponent(photo.file)}`;
@@ -350,10 +383,73 @@
     caption.textContent = photo.title;
     figure.appendChild(caption);
 
-    frag.appendChild(figure);
+    return figure;
+  };
+
+  let current = { place: null, figure: null };
+
+  // clicking the selected photo again clears the selection
+  const select = (figure, photo) => {
+    if (current.figure) current.figure.classList.remove('selected');
+    const same = current.figure === figure;
+    current.figure = same ? null : figure;
+    if (!same) figure.classList.add('selected');
+    setUrl(current.place, same ? null : photo);
+  };
+
+  const render = (place, photoSlug) => {
+    current = { place, figure: null };
+    wall.replaceChildren();
+    message.hidden = true;
+
+    const photos = photosByPlace[place.id] || [];
+    if (!photos.length) {
+      fail(`No photos yet. Drop images into <code>${assetsRoot}/${place.id}/</code> and run <code>npm run photos</code>.`);
+      setUrl(place);
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    let preselected = null;
+    for (const photo of photos) {
+      const figure = buildFigure(photo, `${assetsRoot}/${place.id}`);
+      figure.addEventListener('click', (e) => { if (!e.target.closest('a')) select(figure, photo); });
+      figure.addEventListener('keydown', (e) => {
+        if (e.target === figure && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(figure, photo); }
+      });
+      if (photoSlug && slug(photo.title) === photoSlug) preselected = { figure, photo };
+      frag.appendChild(figure);
+    }
+    wall.appendChild(frag);
+
+    if (preselected) {
+      select(preselected.figure, preselected.photo);
+      preselected.figure.scrollIntoView({ block: 'center' });
+    } else {
+      setUrl(place);
+    }
+  };
+
+  // one tag per place; the pressed tag marks the place on show
+  const tags = document.getElementById('places');
+  const show = (place, photoSlug) => {
+    for (const tag of tags.children) tag.setAttribute('aria-pressed', tag.dataset.url === place.url);
+    render(place, photoSlug);
+  };
+  for (const place of places) {
+    const tag = document.createElement('button');
+    tag.type = 'button';
+    tag.className = 'eyebrow';
+    tag.textContent = place.title;
+    tag.dataset.url = place.url;
+    tag.addEventListener('click', () => { if (place !== current.place) show(place); });
+    tags.appendChild(tag);
   }
 
-  wall.appendChild(frag);
+  // unknown or missing ?location= falls back to the newest place
+  const params = new URLSearchParams(window.location.search);
+  const initial = places.find((place) => place.url === params.get('location')) || places[0];
+  show(initial, params.get('photo'));
 })();
 </script>
 </body>
