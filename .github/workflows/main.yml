@@ -32,7 +32,7 @@ jobs:
         run: npm run build
 
       - name: Stage static files
-        run: cp -r assets config.json photos.json dist/
+        run: cp -r assets config.json dist/
 
       - name: Set up SSH key
         run: |

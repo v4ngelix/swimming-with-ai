@@ -1,46 +1,51 @@
-import locations from './locations.js';
+import locations from './locations.ts';
+import photosByPlace from './photos.ts';
+import type { Button, Config, Location, Photo } from './types.ts';
+
+declare const __APP_VERSION__: string | undefined;
+
+type Place = Location & { id: string };
 
 (async function () {
   // replaced at build time by vite's `define`; empty when the page runs without vite
   const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '';
 
-  const wall = document.getElementById('wall');
-  const message = document.getElementById('message');
+  const wall = document.getElementById('wall')!;
+  const message = document.getElementById('message')!;
 
-  const fail = (html) => {
+  const fail = (html: string) => {
     message.innerHTML = html;
     message.hidden = false;
   };
 
-  const getJSON = async (url) => {
+  const getJSON = async <T>(url: string): Promise<T> => {
     const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`${url}: ${res.status}`);
     return res.json();
   };
 
-  let config, data;
+  let config: Config;
   try {
-    [config, data] = await Promise.all([getJSON('config.json'), getJSON('photos.json')]);
+    config = await getJSON<Config>('config.json');
   } catch (err) {
-    fail(`Could not load the photo data (${err.message}).<br>` +
-         `Run <code>npm run photos</code>, then start the dev server with <code>npm run dev</code> — ` +
-         `opening index.html straight from disk blocks the JSON files.`);
+    fail(`Could not load the config (${(err as Error).message}).<br>` +
+         `Start the dev server with <code>npm run dev</code> — ` +
+         `opening index.html straight from disk blocks the JSON file.`);
     return;
   }
 
   const assetsRoot = (config.assetsDir || 'assets').replace(/\/+$/, '');
   const buttons = config.buttons || [];
-  const photosByPlace = data.photos || {};
-
+// TODO
   // newest place first (locations.js lists them oldest first)
-  const places = Object.entries(locations).map(([id, place]) => ({ id, ...place })).reverse();
+  const places: Place[] = Object.entries(locations).map(([id, place]) => ({ id, ...place })).reverse();
 
   // url-safe photo name: "Coris julis" -> "coris-julis"
-  const slug = (title) => title.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+  const slug = (title: string) => title.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   // ?location=<place url>&photo=<photo slug>, so a copied url reopens the same view
-  const setUrl = (place, photo) => {
+  const setUrl = (place: Place, photo?: Photo | null) => {
     const params = new URLSearchParams({ location: place.url });
     if (photo) params.set('photo', slug(photo.title));
     history.replaceState(null, '', `?${params}`);
@@ -48,7 +53,7 @@ import locations from './locations.js';
 
   // A button's link comes from the photo's own `links` map, falling back to the
   // button's urlTemplate. An explicit empty string hides the button for that photo.
-  const resolveUrl = (photo, button) => {
+  const resolveUrl = (photo: Photo, button: Button) => {
     const own = photo.links && photo.links[button.id];
     if (own !== undefined) return own;
     if (!button.urlTemplate) return '';
@@ -57,7 +62,7 @@ import locations from './locations.js';
       .replace(/{title}/g, encodeURIComponent(photo.title));
   };
 
-  const buildFigure = (photo, assetsDir) => {
+  const buildFigure = (photo: Photo, assetsDir: string) => {
     const figure = document.createElement('figure');
     figure.tabIndex = 0;
 
@@ -116,18 +121,18 @@ import locations from './locations.js';
     return figure;
   };
 
-  let current = { place: null, figure: null };
+  let current: { place: Place | null; figure: HTMLElement | null } = { place: null, figure: null };
 
   // clicking the selected photo again clears the selection
-  const select = (figure, photo) => {
+  const select = (figure: HTMLElement, photo: Photo) => {
     if (current.figure) current.figure.classList.remove('selected');
     const same = current.figure === figure;
     current.figure = same ? null : figure;
     if (!same) figure.classList.add('selected');
-    setUrl(current.place, same ? null : photo);
+    setUrl(current.place!, same ? null : photo);
   };
 
-  const render = (place, photoSlug) => {
+  const render = (place: Place, photoSlug?: string | null) => {
     current = { place, figure: null };
     wall.replaceChildren();
     message.hidden = true;
@@ -140,10 +145,10 @@ import locations from './locations.js';
     }
 
     const frag = document.createDocumentFragment();
-    let preselected = null;
+    let preselected: { figure: HTMLElement; photo: Photo } | null = null;
     for (const photo of photos) {
       const figure = buildFigure(photo, `${assetsRoot}/${place.id}`);
-      figure.addEventListener('click', (e) => { if (!e.target.closest('a')) select(figure, photo); });
+      figure.addEventListener('click', (e) => { if (!(e.target as Element).closest('a')) select(figure, photo); });
       figure.addEventListener('keydown', (e) => {
         if (e.target === figure && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(figure, photo); }
       });
@@ -161,9 +166,9 @@ import locations from './locations.js';
   };
 
   // one tag per place; the pressed tag marks the place on show
-  const tags = document.getElementById('places');
-  const show = (place, photoSlug) => {
-    for (const tag of tags.children) tag.setAttribute('aria-pressed', tag.dataset.url === place.url);
+  const tags = document.getElementById('places')!;
+  const show = (place: Place, photoSlug?: string | null) => {
+    for (const tag of tags.children as HTMLCollectionOf<HTMLElement>) tag.setAttribute('aria-pressed', String(tag.dataset.url === place.url));
     render(place, photoSlug);
   };
   for (const place of places) {

@@ -1,4 +1,6 @@
-const locations = {
+import type { Location } from './types.ts';
+
+const locations: Record<string, Location> = {
   1: {
     url: "sardinia-26",
     title: "Sardinia · East coast"

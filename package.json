@@ -6,11 +6,14 @@
   "description": "Masonry photo wall of marine flora and fauna from the east coast of Sardinia",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "photos": "node scripts/photos.mjs"
+    "photos": "node scripts/photos.ts",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2",
     "vite": "^7.1.5"
   }
 }
