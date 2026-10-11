@@ -3,6 +3,14 @@ import type { Photo } from '../types.ts';
 const photos: Record<string, Photo[]> = {
   1: [
     {
+      file: "Potamon potamios.jpeg",
+      title: "Potamon potamios",
+      version: "1.0.2",
+      links: {}
+    }
+  ],
+  2: [
+    {
       file: "Anemonia sulcata.png",
       title: "Anemonia sulcata",
       version: "1.0.0",
@@ -114,7 +122,7 @@ const photos: Record<string, Photo[]> = {
       links: {}
     }
   ],
-  2: [
+  3: [
     {
       file: "Aplysina aerophoba.png",
       title: "Aplysina aerophoba",
@@ -124,14 +132,6 @@ const photos: Record<string, Photo[]> = {
     {
       file: "Diplodus vulgaris.png",
       title: "Diplodus vulgaris",
-      version: "1.0.2",
-      links: {}
-    }
-  ],
-  3: [
-    {
-      file: "Potamon potamios.jpeg",
-      title: "Potamon potamios",
       version: "1.0.2",
       links: {}
     }
