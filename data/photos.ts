@@ -124,15 +124,81 @@ const photos: Record<string, Photo[]> = {
   ],
   3: [
     {
+      file: "Anemonia sulcata.png",
+      title: "Anemonia sulcata",
+      version: "1.0.3",
+      links: {}
+    },
+    {
       file: "Aplysina aerophoba.png",
       title: "Aplysina aerophoba",
       version: "1.0.2",
       links: {}
     },
     {
+      file: "Atherina boyeri.png",
+      title: "Atherina boyeri",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Beroe ovata.png",
+      title: "Beroe ovata",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Clibanarius erythropus.png",
+      title: "Clibanarius erythropus",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Diplodus sargus.png",
+      title: "Diplodus sargus",
+      version: "1.0.3",
+      links: {}
+    },
+    {
       file: "Diplodus vulgaris.png",
       title: "Diplodus vulgaris",
       version: "1.0.2",
+      links: {}
+    },
+    {
+      file: "Palaemon elegans.png",
+      title: "Palaemon elegans",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Parablennius sanguinolentus.png",
+      title: "Parablennius sanguinolentus",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Rhodolith.png",
+      title: "Rhodolith",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Sarpa salpa.png",
+      title: "Sarpa salpa",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Sepia officinalis.png",
+      title: "Sepia officinalis",
+      version: "1.0.3",
+      links: {}
+    },
+    {
+      file: "Serranus scriba.png",
+      title: "Serranus scriba",
+      version: "1.0.3",
       links: {}
     }
   ]
