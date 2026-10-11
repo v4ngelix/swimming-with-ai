@@ -1,0 +1,5 @@
+- [ ] Notes - similar to fav icon. when clicked displays a modal.
+  - Pinna Rudis - endangered
+  - Potamon potamios - where it all started.
+  - Sarpa Salpa - Really cool, got surrounded by a big hear, grazing the bottom like a herd of cows.
+  - posidonia oceanica - Over 1m high mounds, signs of erosion.
