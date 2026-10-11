@@ -62,14 +62,14 @@
         "links": {}
       },
       {
-        "file": "Pinna nobilis.png",
-        "title": "Pinna nobilis",
-        "version": "1.0.1",
+        "file": "Petrosia ficiformis.png",
+        "title": "Petrosia ficiformis",
+        "version": "1.0.2",
         "links": {}
       },
       {
-        "file": "Pinna Rudis.png",
-        "title": "Pinna Rudis",
+        "file": "Pinna rudis.png",
+        "title": "Pinna rudis",
         "version": "1.0.1",
         "links": {
           "wikipedia": "https://en.wikipedia.org/wiki/Pinna_nobilis"
@@ -92,6 +92,12 @@
         "file": "Serranus scriba.png",
         "title": "Serranus scriba",
         "version": "1.0.0",
+        "links": {}
+      },
+      {
+        "file": "Symphodus rostratus.png",
+        "title": "Symphodus rostratus",
+        "version": "1.0.2",
         "links": {}
       },
       {
