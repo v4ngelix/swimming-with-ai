@@ -3,3 +3,6 @@
   - Potamon potamios - where it all started.
   - Sarpa Salpa - Really cool, got surrounded by a big hear, grazing the bottom like a herd of cows.
   - posidonia oceanica - Over 1m high mounds, signs of erosion.
+- Styles
+  - [ ] Favourite tag differs from the general style
+  - [ ] Hover effect affect tags in an incorrect way
