@@ -71,7 +71,9 @@
         "file": "Pinna Rudis.png",
         "title": "Pinna Rudis",
         "version": "1.0.1",
-        "links": {}
+        "links": {
+          "wiki": "https://en.wikipedia.org/wiki/Pinna_nobilis"
+        },
         "favourite": true
       },
       {
