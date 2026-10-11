@@ -212,12 +212,34 @@
   .actions a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
   .actions svg { width: 19px; height: 19px; }
 
-  /* marks photos added in the current app version; always visible, unlike the overlays */
-  .badge-latest {
+  .badges {
     position: absolute;
     top: var(--pad);
     left: var(--pad);
     z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform .28s cubic-bezier(.2, .7, .3, 1);
+  }
+
+  .badge-favourite {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, .95);
+    background: #f5b800;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+
+    svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+
+  .badge-latest {
     padding: 4px 10px;
     border-radius: 999px;
     background: var(--coral);
@@ -227,24 +249,24 @@
     letter-spacing: .12em;
     text-transform: uppercase;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
-    transition: transform .28s cubic-bezier(.2, .7, .3, 1);
   }
-  /* cancels the tile's hover lift so the badge stays put on the page */
-  figure:hover .badge-latest,
-  figure:focus-within .badge-latest { transform: translateY(4px); }
 
-  /* touch devices have no hover: show the overlays permanently */
   @media (hover: none) {
-    .scrim, figcaption, .actions { opacity: 1; transform: none; }
+    .scrim,
+    figcaption,
+    .actions
+    {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    figure, figure img, figcaption, .actions, .scrim, .badge-latest { transition: none; }
+    figure, figure img, figcaption, .actions, .scrim, .badges { transition: none; }
     figure:hover { transform: none; }
     figure:hover img { transform: none; }
-    /* the tile no longer lifts, so nothing needs a counter-offset */
-    figure:hover .badge-latest,
-    figure:focus-within .badge-latest,
+    figure:hover .badges,
+    figure:focus-within .badges,
     figure:hover .actions,
     figure:focus-within .actions { transform: none; }
   }
@@ -259,6 +281,7 @@
     color: var(--muted);
     text-align: center;
   }
+
   .message code {
     padding: 2px 6px;
     border-radius: 6px;
@@ -356,12 +379,24 @@ import locations from './locations.js';
     scrim.className = 'scrim';
     figure.appendChild(scrim);
 
+    const badges = document.createElement('div');
+    badges.className = 'badges';
+    if (photo.favourite === true) {
+      const star = document.createElement('span');
+      star.className = 'badge-favourite';
+      star.title = 'Favourite';
+      star.setAttribute('aria-label', star.title);
+      star.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+        '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>';
+      badges.appendChild(star);
+    }
     if (photo.version && photo.version === APP_VERSION) {
       const badge = document.createElement('span');
       badge.className = 'badge-latest';
       badge.textContent = 'latest';
-      figure.appendChild(badge);
+      badges.appendChild(badge);
     }
+    if (badges.children.length) figure.appendChild(badges);
 
     const actions = document.createElement('div');
     actions.className = 'actions';
