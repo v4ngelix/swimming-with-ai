@@ -1,11 +1,15 @@
 // Adds any image in a location's assets folder (assets/<location id>/) that data/photos.ts doesn't know about yet.
 // New entries get the current package.json version, which the wall marks as "new".
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+// Non-WebP images are converted to WebP first and the originals deleted; entries keep their metadata.
+import { readFileSync, writeFileSync, readdirSync, existsSync, unlinkSync } from 'node:fs';
+import sharp from 'sharp';
 import locations from '../data/locations.ts';
 import photos from '../data/photos.ts';
 import type { Config, Photo } from '../types.ts';
 
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif|gif)$/i;
+const CONVERT_EXT = /\.(png|jpe?g|avif|gif)$/i;
+const WEBP_QUALITY = 80;
 
 const readJSON = <T>(path: string): T => JSON.parse(readFileSync(path, 'utf8'));
 
@@ -25,11 +29,39 @@ for (const [id, location] of Object.entries(locations)) {
     continue;
   }
 
+  for (const file of readdirSync(assetsDir).filter((file) => CONVERT_EXT.test(file))) {
+    const webp = file.replace(CONVERT_EXT, '.webp');
+    if (existsSync(`${assetsDir}/${webp}`)) {
+      console.warn(`  ! ${assetsDir}/${webp} already exists, keeping ${file} unconverted`);
+      continue;
+    }
+    try {
+      // rotate() bakes in EXIF orientation, which WebP output would otherwise drop
+      await sharp(`${assetsDir}/${file}`, { animated: true }).rotate().webp({ quality: WEBP_QUALITY }).toFile(`${assetsDir}/${webp}`);
+    } catch (error) {
+      console.warn(`  ! could not convert ${assetsDir}/${file}: ${(error as Error).message}`);
+      continue;
+    }
+    unlinkSync(`${assetsDir}/${file}`);
+    console.log(`${location.title}: converted ${file} -> ${webp}`);
+    for (const photo of listed) {
+      if (photo.file === file) { photo.file = webp; changed = true; }
+    }
+  }
+
   const known = new Set(listed.map((photo) => photo.file));
   const files = readdirSync(assetsDir).filter((file) => IMAGE_EXT.test(file));
   const added = files
     .filter((file) => !known.has(file))
     .map((file): Photo => ({ file, title: file.replace(IMAGE_EXT, ''), version, links: {} }));
+
+  // width/height let the wall reserve space before images load
+  for (const photo of [...listed, ...added]) {
+    if (photo.width && photo.height || !files.includes(photo.file)) continue;
+    const { width, height } = await sharp(`${assetsDir}/${photo.file}`).metadata();
+    Object.assign(photo, { width, height });
+    changed = true;
+  }
 
   const missing = listed.filter((photo) => !files.includes(photo.file));
 
