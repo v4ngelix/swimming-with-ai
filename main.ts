@@ -139,7 +139,7 @@ type Place = Location & { id: string };
 
     const photos = photosByPlace[place.id] || [];
     if (!photos.length) {
-      fail(`No photos yet. Drop images into <code>${assetsRoot}/${place.id}/</code> and run <code>npm run photos</code>.`);
+      fail(`No photos yet. Drop images into <code>${assetsRoot}/${place.id}/</code> and run <code>npm run sync-photos</code>.`);
       setUrl(place);
       return;
     }
