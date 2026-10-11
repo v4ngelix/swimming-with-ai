@@ -1,12 +1,16 @@
 const locations = {
   1: {
-    url: "sardinia-25",
+    url: "sardinia-26",
     title: "Sardinia · East coast"
   },
   2: {
-    url: "istria-25",
+    url: "istria-26",
     title: "Istria - West coast"
-  }
+  },
+  3: {
+    url: "crete-25",
+    title: "Crete - South coast"
+  },
 }
 
 export default locations;

@@ -68,6 +68,12 @@
         "links": {}
       },
       {
+        "file": "Pinna Rudis.png",
+        "title": "Pinna Rudis",
+        "version": "1.0.1",
+        "links": {}
+      },
+      {
         "file": "Rhodolith.png",
         "title": "Rhodolith",
         "version": "1.0.0",
@@ -102,6 +108,14 @@
       {
         "file": "Diplodus vulgaris.png",
         "title": "Diplodus vulgaris",
+        "version": "1.0.2",
+        "links": {}
+      }
+    ],
+    "3": [
+      {
+        "file": "Potamon potamios.jpeg",
+        "title": "Potamon potamios",
         "version": "1.0.2",
         "links": {}
       }
