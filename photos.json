@@ -2,8 +2,8 @@
   "photos": {
     "1": [
       {
-        "file": "anemonia sulcata.png",
-        "title": "anemonia sulcata",
+        "file": "Anemonia sulcata.png",
+        "title": "Anemonia sulcata",
         "version": "1.0.0",
         "links": {}
       },
@@ -75,6 +75,12 @@
           "wikipedia": "https://en.wikipedia.org/wiki/Pinna_nobilis"
         },
         "favourite": true
+      },
+      {
+        "file": "Posidonia oceanica.JPG",
+        "title": "Posidonia oceanica",
+        "version": "1.0.2",
+        "links": {}
       },
       {
         "file": "Rhodolith.png",
