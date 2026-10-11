@@ -1,4 +1,4 @@
-import type { Photo } from './types.ts';
+import type { Photo } from '../types.ts';
 
 const photos: Record<string, Photo[]> = {
   1: [

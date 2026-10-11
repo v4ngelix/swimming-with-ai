@@ -1,4 +1,4 @@
-import type { Location } from './types.ts';
+import type { Location } from '../types.ts';
 
 const locations: Record<string, Location> = {
   1: {

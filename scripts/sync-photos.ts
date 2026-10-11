@@ -1,8 +1,8 @@
-// Adds any image in a location's assets folder (assets/<location id>/) that photos.ts doesn't know about yet.
+// Adds any image in a location's assets folder (assets/<location id>/) that data/photos.ts doesn't know about yet.
 // New entries get the current package.json version, which the wall marks as "new".
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
-import locations from '../locations.ts';
-import photos from '../photos.ts';
+import locations from '../data/locations.ts';
+import photos from '../data/photos.ts';
 import type { Config, Photo } from '../types.ts';
 
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif|gif)$/i;
@@ -43,14 +43,14 @@ for (const [id, location] of Object.entries(locations)) {
   }
 
   for (const photo of missing) {
-    console.warn(`  ! ${photo.file} is listed in photos.ts but not in ${assetsDir}/`);
+    console.warn(`  ! ${photo.file} is listed in data/photos.ts but not in ${assetsDir}/`);
   }
 }
 
 // written as JSON with bare keys, so hand edits (links, favourites) survive regeneration; comments don't
 const toSource = (byLocation: Record<string, Photo[]>) =>
-  `import type { Photo } from './types.ts';\n\n` +
+  `import type { Photo } from '../types.ts';\n\n` +
   `const photos: Record<string, Photo[]> = ${JSON.stringify(byLocation, null, 2).replace(/^(\s*)"(\w+)":/gm, '$1$2:')};\n\n` +
   'export default photos;\n';
 
-if (changed) writeFileSync('photos.ts', toSource(byLocation));
+if (changed) writeFileSync('data/photos.ts', toSource(byLocation));

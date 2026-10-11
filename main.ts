@@ -1,5 +1,5 @@
-import locations from './locations.ts';
-import photosByPlace from './photos.ts';
+import locations from './data/locations.ts';
+import photosByPlace from './data/photos.ts';
 import type { Button, Config, Location, Photo } from './types.ts';
 
 declare const __APP_VERSION__: string | undefined;
@@ -37,7 +37,7 @@ type Place = Location & { id: string };
   const assetsRoot = (config.assetsDir || 'assets').replace(/\/+$/, '');
   const buttons = config.buttons || [];
 // TODO
-  // newest place first (locations.js lists them oldest first)
+  // newest place first (data/locations.ts lists them oldest first)
   const places: Place[] = Object.entries(locations).map(([id, place]) => ({ id, ...place })).reverse();
 
   // url-safe photo name: "Coris julis" -> "coris-julis"
